@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مولد رخصة القيادة</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @font-face {
+            font-family: 'KSARegular';
+            src: url('fonts/KSARegular_B.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --success-color: #27ae60;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'KSARegular', 'Amiri', serif;
+            background-color: #f5f7fa;
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px 0;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            font-family: 'KSARegular', serif;
+        }
+
+        .app-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+        }
+
+        .form-section {
+            flex: 1;
+            min-width: 300px;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .preview-section {
+            flex: 1;
+            min-width: 300px;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 2px solid var(--light-color);
+            padding-bottom: 10px;
+            font-family: 'KSARegular', serif;
+        }
+
+        .section-title i {
+            color: var(--secondary-color);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark-color);
+            font-family: 'KSARegular', serif;
+        }
+
+        .form-group label i {
+            margin-left: 8px;
+            color: var(--secondary-color);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-family: 'KSARegular', serif;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+            outline: none;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-family: 'KSARegular', serif;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background-color: var(--success-color);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #219955;
+            transform: translateY(-2px);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+
+        canvas {
+            border-radius: 8px;
+            max-width: 100%;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .file-upload {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-upload-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            text-align: center;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'KSARegular', serif;
+        }
+
+        .file-upload-btn:hover {
+            background-color: #dfe6e9;
+        }
+
+        .file-upload input[type="file"] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .canvas-container {
+            margin-top: 20px;
+            position: relative;
+        }
+
+        .watermark {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            font-size: 0.8rem;
+            color: rgba(0, 0, 0, 0.3);
+            font-family: 'KSARegular', serif;
+        }
+
+        @media (max-width: 768px) {
+            .app-container {
+                flex-direction: column;
+            }
+
+            header h1 {
+                font-size: 1.8rem;
+            }
+
+            .btn-group {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-id-card"></i> مولـد رخصة القيادة </h1>
+            <p>أدخل البيانات المطلوبة لإنشاء رخصة قيادة شخصية</p>
+        </header>
+
+        <div class="app-container">
+            <section class="form-section">
+                <h2 class="section-title"><i class="fas fa-edit"></i> بيانات الرخصة</h2>
+
+                <div class="form-group">
+                    <label for="nameAr"><i class="fas fa-signature"></i> الاسم بالعربي</label>
+                    <input type="text" id="nameAr" class="form-control" placeholder="أدخل الاسم باللغة العربية">
+                </div>
+
+                <div class="form-group">
+                    <label for="nameEn"><i class="fas fa-signature"></i> الاسم بالإنجليزي</label>
+                    <input type="text" id="nameEn" class="form-control" placeholder="أدخل الاسم باللغة الإنجليزية">
+                </div>
+
+                <div class="form-group">
+                    <label for="idNumber"><i class="fas fa-id-badge"></i> رقم الهوية</label>
+                    <input type="text" id="idNumber" class="form-control" placeholder="أدخل رقم الهوية">
+                </div>
+
+                <div class="form-group">
+                    <label for="issueDate"><i class="far fa-calendar-alt"></i> تاريخ الإصدار</label>
+                    <input type="date" id="issueDate" class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label for="birthDate"><i class="fas fa-birthday-cake"></i> تاريخ الميلاد</label>
+                    <input type="date" id="birthDate" class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label for="nationality"><i class="fas fa-globe"></i> الجنسية</label>
+                    <input type="text" id="nationality" class="form-control" placeholder="أدخل الجنسية بالعربية">
+                </div>
+
+                <div class="form-group">
+                    <label for="nationalityEn" style="display:none"><i class="fas fa-globe"></i> الجنسية
+                        بالإنجليزية</label>
+                    <input type="text" id="nationalityEn" class="form-control" placeholder="سيتم تحويلها تلقائياً"
+                        style="display:none">
+                </div>
+
+                <div class="form-group">
+                    <label for="bloodType"><i class="fas fa-tint"></i> فصيلة الدم</label>
+                    <input type="text" id="bloodType" class="form-control" placeholder="أدخل فصيلة الدم">
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-camera"></i> رفع صورة شخصية (145×210 بكسل)</label>
+                    <div class="file-upload">
+                        <div class="file-upload-btn">اختر صورة <i class="fas fa-upload"></i></div>
+                        <input type="file" id="photoInput" accept="image/*">
+                    </div>
+                </div>
+
+                <div class="btn-group">
+                    <button id="downloadBtn" class="btn btn-success">
+                        <i class="fas fa-download"></i> تحميل الرخصة
+                    </button>
+                </div>
+            </section>
+
+            <section class="preview-section">
+                <h2 class="section-title"><i class="fas fa-eye"></i> معاينة الرخصة</h2>
+                <div class="canvas-container">
+                    <canvas id="licenseCanvas" width="652" height="446"></canvas>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // تحميل الخط قبل أي شيء
+            const font = new FontFace('KSARegular', 'url(fonts/KSARegular_B.ttf)');
+            font.load().then(function (loadedFont) {
+                document.fonts.add(loadedFont);
+                initApp();
+            }).catch(function (error) {
+                console.error('فشل تحميل الخط:', error);
+                initApp(); // استمرار التطبيق حتى لو فشل تحميل الخط
+            });
+        });
+
+        function initApp() {
+            const canvas = document.getElementById('licenseCanvas');
+            const ctx = canvas.getContext('2d');
+            const downloadBtn = document.getElementById('downloadBtn');
+
+            // صورة خلفية الرخصة
+            const baseImage = new Image();
+            baseImage.src = 'test.png';
+            baseImage.onload = () => {
+                ctx.drawImage(baseImage, 0, 0);
+                drawPlaceholderText();
+            };
+
+            // عناصر الإدخال
+            const inputs = {
+                nameAr: document.getElementById('nameAr'),
+                nameEn: document.getElementById('nameEn'),
+                idNumber: document.getElementById('idNumber'),
+                issueDate: document.getElementById('issueDate'),
+                birthDate: document.getElementById('birthDate'),
+                nationality: document.getElementById('nationality'),
+                nationalityEn: document.getElementById('nationalityEn'),
+                bloodType: document.getElementById('bloodType'),
+                photoInput: document.getElementById('photoInput')
+            };
+
+            // قاموس لتحويل الجنسيات من العربية إلى الإنجليزية
+            const nationalityMap = {
+                'مصر': 'Egypt',
+                'السعودية': 'Saudi Arabia',
+                'الامارات': 'UAE',
+                'الإمارات': 'UAE',
+                'قطر': 'Qatar',
+                'الكويت': 'Kuwait',
+                'عمان': 'Oman',
+                'البحرين': 'Bahrain',
+                'العراق': 'Iraq',
+                'الاردن': 'Jordan',
+                'الأردن': 'Jordan',
+                'لبنان': 'Lebanon',
+                'سوريا': 'Syria',
+                'فلسطين': 'Palestine',
+                'اليمن': 'Yemen',
+                'ليبيا': 'Libya',
+                'تونس': 'Tunisia',
+                'الجزائر': 'Algeria',
+                'الجزاير': 'Algeria',
+                'المغرب': 'Morocco',
+                'السودان': 'Sudan',
+                'الصومال': 'Somalia',
+                'موريتانيا': 'Mauritania',
+                'جيبوتي': 'Djibouti',
+                'جزر القمر': 'Comoros',
+                'تركيا': 'Turkey',
+                'ايران': 'Iran',
+                'إيران': 'Iran',
+                'باكستان': 'Pakistan',
+                'الهند': 'India',
+                'بنجلاديش': 'Bangladesh',
+                'بنغلاديش': 'Bangladesh',
+                'افغانستان': 'Afghanistan',
+                'أفغانستان': 'Afghanistan',
+                'الفلبين': 'Philippines',
+                'اندونيسيا': 'Indonesia',
+                'إندونيسيا': 'Indonesia',
+                'نيجيريا': 'Nigeria',
+                'اثيوبيا': 'Ethiopia',
+                'إثيوبيا': 'Ethiopia',
+                'امريكا': 'USA',
+                'أمريكا': 'USA',
+                'الولايات المتحدة': 'USA',
+                'كندا': 'Canada',
+                'استراليا': 'Australia',
+                'أستراليا': 'Australia',
+                'بريطانيا': 'UK',
+                'انجلترا': 'UK',
+                'إنجلترا': 'UK',
+                'فرنسا': 'France',
+                'المانيا': 'Germany',
+                'ألمانيا': 'Germany',
+                'ايطاليا': 'Italy',
+                'إيطاليا': 'Italy',
+                'اسبانيا': 'Spain',
+                'إسبانيا': 'Spain',
+                'روسيا': 'Russia',
+                'الصين': 'China',
+                'اليابان': 'Japan',
+                'كوريا الجنوبية': 'South Korea',
+                'البرازيل': 'Brazil',
+                'المكسيك': 'Mexico',
+                'جنوب افريقيا': 'South Africa',
+                'جنوب أفريقيا': 'South Africa'
+            };
+
+            // تحويل الاسم الإنجليزي إلى أحرف كبيرة عند الإدخال
+            inputs.nameEn.addEventListener('input', function () {
+                this.value = this.value.toUpperCase();
+            });
+
+            // تحويل الجنسية من العربية إلى الإنجليزية تلقائياً
+            inputs.nationality.addEventListener('input', function () {
+                const arabicNationality = this.value.trim();
+                let englishNationality = '';
+
+                if (nationalityMap[arabicNationality]) {
+                    englishNationality = nationalityMap[arabicNationality];
+                } else {
+                    englishNationality = arabicNationality;
+                }
+
+                inputs.nationalityEn.value = englishNationality;
+                updateLicense();
+            });
+
+            // إضافة مستمعات الأحداث لكل حقل إدخال
+            Object.keys(inputs).forEach(key => {
+                if (key !== 'nationalityEn') {
+                    inputs[key].addEventListener('input', updateLicense);
+                    inputs[key].addEventListener('change', updateLicense);
+                }
+            });
+
+            // إضافة مستمع حدث لزر التحميل
+            downloadBtn.addEventListener('click', downloadCanvas);
+
+            function drawPlaceholderText() {
+                ctx.font = '20px "KSARegular"';
+                ctx.fillStyle = '#6c757d';
+                ctx.textAlign = 'right';
+            }
+
+            function updateLicense() {
+                const nameAr = inputs.nameAr.value;
+                const nameEn = inputs.nameEn.value;
+                const idNumber = inputs.idNumber.value;
+                const issueDate = inputs.issueDate.value;
+                const birthDate = inputs.birthDate.value;
+                const nationality = inputs.nationality.value;
+                const nationalityEn = inputs.nationalityEn.value;
+                const bloodType = inputs.bloodType.value;
+
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(baseImage, 0, 0);
+
+                if (nameAr || idNumber) {
+                    // النص العربي
+                    ctx.font = 'bold 20px "KSARegular"';
+                    ctx.fillStyle = '#000';
+                    ctx.textAlign = 'right';
+
+                    if (nameAr) {
+                        ctx.fillText(nameAr, 600, 140);
+                        if (nameEn) ctx.fillText(nameEn.toUpperCase(), 600, 170);
+                    }
+
+                    if (idNumber) ctx.fillText(convertToArabicNumbers(idNumber), 550, 200);
+                    if (issueDate) ctx.fillText(formatArabicDate(issueDate), 550, 250);
+                    if (birthDate) ctx.fillText(formatArabicDate(birthDate), 550, 275);
+                    if (nationality) ctx.fillText(nationality, 550, 300);
+                    if (issueDate) {
+                        const expiryDate = new Date(issueDate);
+                        expiryDate.setFullYear(expiryDate.getFullYear() + 10);
+                        ctx.fillText(formatArabicDate(expiryDate.toISOString().slice(0, 10)), 550, 330);
+                    }
+                    if (bloodType) ctx.fillText(bloodType, 550, 355);
+
+                    // النص الإنجليزي
+                    ctx.textAlign = 'left';
+                    ctx.font = 'bold 20px "KSARegular"';
+
+                    if (idNumber) ctx.fillText(idNumber, 300, 200);
+                    if (issueDate) ctx.fillText(formatEnglishDate(issueDate), 300, 250);
+                    if (birthDate) ctx.fillText(formatEnglishDate(birthDate), 300, 275);
+                    if (nationalityEn) ctx.fillText(nationalityEn, 300, 300);
+                    if (issueDate) {
+                        const expiryDate = new Date(issueDate);
+                        expiryDate.setFullYear(expiryDate.getFullYear() + 10);
+                        ctx.fillText(formatEnglishDate(expiryDate.toISOString().slice(0, 10)), 300, 330);
+                    }
+                    if (bloodType) ctx.fillText(bloodType, 300, 355);
+
+                    // صورة شخصية
+                    if (inputs.photoInput.files[0]) {
+                        const reader = new FileReader();
+                        reader.onload = function (e) {
+                            const img = new Image();
+                            img.onload = function () {
+                                ctx.drawImage(img, 60, 110, 145, 210);
+                            };
+                            img.src = e.target.result;
+                        };
+                        reader.readAsDataURL(inputs.photoInput.files[0]);
+                    }
+                } else {
+                    drawPlaceholderText();
+                }
+            }
+
+            function convertToArabicNumbers(num) {
+                if (!num) return '';
+                const arabicNumbers = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+                return num.toString().replace(/\d/g, (d) => arabicNumbers[d]);
+            }
+
+            function formatArabicDate(dateStr) {
+                if (!dateStr) return '';
+                const date = new Date(dateStr);
+                const day = date.getDate().toString().padStart(2, '0');
+                const month = (date.getMonth() + 1).toString().padStart(2, '0');
+                const year = date.getFullYear();
+                return `${convertToArabicNumbers(year)}/${convertToArabicNumbers(month)}/${convertToArabicNumbers(day)}`;
+            }
+
+            function formatEnglishDate(dateStr) {
+                if (!dateStr) return '';
+                const date = new Date(dateStr);
+                const day = date.getDate().toString().padStart(2, '0');
+                const month = (date.getMonth() + 1).toString().padStart(2, '0');
+                const year = date.getFullYear();
+                return `${day}/${month}/${year}`;
+            }
+
+            function downloadCanvas() {
+                if (!inputs.nameAr.value) {
+                    alert('الرجاء إدخال البيانات أولاً قبل التحميل');
+                    return;
+                }
+
+                const link = document.createElement('a');
+                link.download = 'رخصة_قيادة_' + inputs.nameAr.value + '.png';
+                link.href = canvas.toDataURL('image/png');
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+
+            // تحديث أولي للرخصة
+            updateLicense();
+        }
+    </script>
+</body>
+
+</html>
